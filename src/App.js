@@ -2,7 +2,9 @@ import React, { useState, useMemo } from "react";
 
 function App() {
   const [cars, setCars] = useState([
-    { id: 1, name: "Toyota", model: "Corolla", year: 2021 },
+    {
+      "id": 1, "name": "Toyota", "model": "Camry", "year": 2021, "color": "red", "price": 21000, "latitude": 55.753215, "longitude": 37.620393
+    },
     { id: 2, name: "Honda", model: "Civic", year: 2022 },
     { id: 3, name: "BMW", model: "X5", year: 2020 },
   ]);
@@ -14,6 +16,9 @@ function App() {
   const [editYear, setEditYear] = useState("");
 
   const sortedCars = useMemo(() => {
+    if (sortField === 'name') {
+      return [...cars].sort((a, b) => a.name.localeCompare(b.name));
+    }
     return [...cars].sort((a, b) => a[sortField] > b[sortField] ? 1 : -1);
   }, [cars, sortField]);
 
