@@ -1,19 +1,26 @@
 import React, { useState, useMemo } from "react";
+import CarCard from "./components/CarCard";
+import CarEdit from "./components/CarEdit";
+import CarSelectOptions from "./components/CarSelectOptions";
 
 function App() {
   const [cars, setCars] = useState([
     {
-      "id": 1, "name": "Toyota", "model": "Camry", "year": 2021, "color": "red", "price": 21000, "latitude": 55.753215, "longitude": 37.620393
+      "id": 1, "name": "Toyota", "model": "Camry", "year": 2021, "color": "red", "price": 15000, "latitude": 55.753215, "longitude": 37.620393
     },
-    { id: 2, name: "Honda", model: "Civic", year: 2022 },
-    { id: 3, name: "BMW", model: "X5", year: 2020 },
+    {
+      "id": 2, "name": "Honda", "model": "Civic", "year": 2022, "color": "red", "price": 34000, "latitude": 55.753215, "longitude": 37.620393
+    },
+    {
+      "id": 3, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+    },
   ]);
 
   const [sortField, setSortField] = useState("name");
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState("");
   const [editModel, setEditModel] = useState("");
-  const [editYear, setEditYear] = useState("");
+  const [editPrice, setEditPrice] = useState("");
 
   const sortedCars = useMemo(() => {
     if (sortField === 'name') {
@@ -26,14 +33,14 @@ function App() {
     const car = cars.find(c => c.id === id);
     setEditName(car.name);
     setEditModel(car.model);
-    setEditYear(car.year);
+    setEditPrice(car.price);
     setEditingId(id);
   };
 
   const handleSave = (id) => {
     const updatedCars = cars.map(car => {
       if (car.id === id) {
-        return { ...car, name: editName, model: editModel, year: editYear };
+        return { ...car, name: editName, model: editModel, price: editPrice };
       } else {
         return car;
       }
@@ -48,32 +55,26 @@ function App() {
 
   return (
       <div>
-        <div>
-          Sort by:
-          <select value={sortField} onChange={(e) => setSortField(e.target.value)}>
-            <option value="name">Name</option>
-            <option value="model">Model</option>
-            <option value="year">Year</option>
-          </select>
-        </div>
+        <CarSelectOptions val={sortField} handleChange={(e) => setSortField(e.target.value)}/>
         {sortedCars.map((car) => (
             <div key={car.id} style={{ border: "1px solid black", padding: "10px", margin: "10px" }}>
-              {editingId === car.id ? (
-                  <div>
-                    <input type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
-                    <input type="text" value={editModel} onChange={(e) => setEditModel(e.target.value)} />
-                    <input type="number" value={editYear} onChange={(e) => setEditYear(parseInt(e.target.value))} />
-                    <button onClick={() => handleSave(car.id)}>Save</button>
-                    <button onClick={() => handleCancel()}>Cancel</button>
-                  </div>
-              ) : (
-                  <div>
-                    <div><b>Name:</b> {car.name}</div>
-                    <div><b>Model:</b> {car.model}</div>
-                    <div><b>Year:</b> {car.year}</div>
-                    <button onClick={() => handleEdit(car.id)}>Edit</button>
-                  </div>
-              )}
+              { editingId === car.id
+                  ? <CarEdit
+                      save={handleSave}
+                      cancel={handleCancel}
+                      name={editName}
+                      model={editModel}
+                      price={editPrice}
+                      id={car.id}
+                      handleName={(e) => setEditName(e.target.value)}
+                      handleModel={(e) => setEditModel(e.target.value)}
+                      handlePrice={(e) => setEditPrice(e.target.value)}
+                  />
+                  : <CarCard
+                      car={car}
+                      handleEdit={handleEdit}
+                  />
+              }
             </div>
         ))}
       </div>
