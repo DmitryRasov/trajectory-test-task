@@ -1,10 +1,11 @@
 import React, {useEffect, useState, useRef} from 'react';
 import DG from '2gis-maps'
+import styles from '../components/styles/Map.module.css'
 
-const Map = ({long, lat}) => {
+const Map = ({long, lat, name}) => {
     const options = {
         center: [lat, long],
-        zoom: 15
+        zoom: 16
     }
     const elRef = useRef();
     const [map, setMap] = useState(null);
@@ -16,19 +17,12 @@ const Map = ({long, lat}) => {
             setMap(innerMap);
         } else {
             innerMap.setView(options.center, options.zoom);
-            DG.marker([options.center[0], options.center[1]]).addTo(innerMap)
+            DG.marker([options.center[0], options.center[1]]).addTo(innerMap).bindPopup(`Здесь находится ${name}`)
 
         }
     });
-
     return (
-        <div
-            ref={elRef}
-            style={{
-                width: `300px`,
-                height: `300px`
-            }}
-        />
+        <div ref={elRef} className={styles.map}></div>
     );
 };
 

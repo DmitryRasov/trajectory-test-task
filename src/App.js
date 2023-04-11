@@ -2,7 +2,6 @@ import React, {useState, useMemo, useEffect} from "react";
 import CarCard from "./components/CarCard";
 import CarEdit from "./components/CarEdit";
 import CarSelectOptions from "./components/CarSelectOptions";
-import Map from "./components/Map";
 import {getCarsService} from "./components/services/getCarsService";
 import styles from './components/styles/App.module.css'
 
@@ -49,7 +48,6 @@ function App() {
   const [cars, setCars] = useState([])
   useEffect(() => {
       const getCars = async () => setCars(await getCarsService())
-
     getCars()
   }, [])
 
@@ -73,9 +71,6 @@ function App() {
     setEditPrice(car.price);
     setEditingId(id);
   };
-  const handleDelete = (car) => {
-    setCars(cars.filter(c => c.id !== car.id))
-  }
   const handleSave = (id) => {
     const updatedCars = cars.map(car => {
       if (car.id === id) {
@@ -87,40 +82,42 @@ function App() {
     setCars(updatedCars);
     setEditingId(null);
   };
-
   const handleCancel = () => {
     setEditingId(null);
   };
+  const handleDelete = (car) => {
+    setCars(cars.filter(c => c.id !== car.id))
+  }
 
   return (
       <div>
         <CarSelectOptions val={sortField} handleChange={(e) => setSortField(e.target.value)}/>
-
-        {sortedCars.map((car) => (
-            <div key={car.id} style={{ border: "1px solid black", padding: "10px", margin: "10px" }}>
-              { editingId === car.id
-                  ? <CarEdit
-                      save={handleSave}
-                      cancel={handleCancel}
-                      name={editName}
-                      model={editModel}
-                      price={editPrice}
-                      id={car.id}
-                      handleName={(e) => setEditName(e.target.value)}
-                      handleModel={(e) => setEditModel(e.target.value)}
-                      handlePrice={(e) => setEditPrice(e.target.value)}
-                  />
-                  : <div className={styles.wrapper}>
+        <div className={styles.wrapper}>
+          {sortedCars.map((car) => (
+              <div className={styles.card} key={car.id}>
+                { editingId === car.id
+                    ? <CarEdit
+                        save={handleSave}
+                        cancel={handleCancel}
+                        name={editName}
+                        model={editModel}
+                        price={editPrice}
+                        id={car.id}
+                        handleName={(e) => setEditName(e.target.value)}
+                        handleModel={(e) => setEditModel(e.target.value)}
+                        handlePrice={(e) => setEditPrice(e.target.value)}
+                    />
+                    :
                     <CarCard
                         car={car}
                         handleEdit={handleEdit}
                         handleDelete={handleDelete}
                     />
-                    <Map lat={car.latitude} long={car.longitude}/>
-                  </div>
-              }
-            </div>
-        ))}
+                }
+              </div>
+          ))}
+        </div>
+
       </div>
   );
 }

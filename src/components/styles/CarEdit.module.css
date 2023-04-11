@@ -1,16 +1,22 @@
 .card {
     display: flex;
+    flex-direction: column;
     border: 2px solid black;
     border-radius: 15px;
     margin: 10px;
+    height: 300px;
+    width: 436px;
     background-color: beige;
-}
-.description {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    width: 140px;
 }
 .btns {
     margin-top: auto;
+    padding: 15px;
+}
+.inputs {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.inputs > input {
+    margin-bottom: 7px;
 }
