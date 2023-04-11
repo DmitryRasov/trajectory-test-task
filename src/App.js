@@ -1,20 +1,56 @@
-import React, { useState, useMemo } from "react";
+import React, {useState, useMemo, useEffect} from "react";
 import CarCard from "./components/CarCard";
 import CarEdit from "./components/CarEdit";
 import CarSelectOptions from "./components/CarSelectOptions";
+import Map from "./components/Map";
+import {getCarsService} from "./components/services/getCarsService";
 
 function App() {
-  const [cars, setCars] = useState([
-    {
-      "id": 1, "name": "Toyota", "model": "Camry", "year": 2021, "color": "red", "price": 15000, "latitude": 55.753215, "longitude": 37.620393
-    },
-    {
-      "id": 2, "name": "Honda", "model": "Civic", "year": 2022, "color": "red", "price": 34000, "latitude": 55.753215, "longitude": 37.620393
-    },
-    {
-      "id": 3, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
-    },
-  ]);
+  // if api doesn't work use this:
+  // const [cars, setCars] = useState([
+  //   // {
+  //   //   "id": 1, "name": "Toyota", "model": "Camry", "year": 2021, "color": "red", "price": 15000, "latitude": 95.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 2, "name": "Honda", "model": "Civic", "year": 2022, "color": "red", "price": 34000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 3, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 4, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 5, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 6, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 7, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 8, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 9, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 10, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 11, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  //   // {
+  //   //   "id": 12, "name": "BMW", "model": "X5", "year": 2020, "color": "red", "price": 41000, "latitude": 55.753215, "longitude": 37.620393
+  //   // },
+  // ]);
+  const [cars, setCars] = useState([])
+  useEffect(() => {
+      const getCars = async () => setCars(await getCarsService())
+
+    getCars()
+  }, [])
 
   const [sortField, setSortField] = useState("name");
   const [editingId, setEditingId] = useState(null);
@@ -36,7 +72,9 @@ function App() {
     setEditPrice(car.price);
     setEditingId(id);
   };
-
+  const handleDelete = (car) => {
+    setCars(cars.filter(c => c.id !== car.id))
+  }
   const handleSave = (id) => {
     const updatedCars = cars.map(car => {
       if (car.id === id) {
@@ -55,7 +93,9 @@ function App() {
 
   return (
       <div>
+
         <CarSelectOptions val={sortField} handleChange={(e) => setSortField(e.target.value)}/>
+
         {sortedCars.map((car) => (
             <div key={car.id} style={{ border: "1px solid black", padding: "10px", margin: "10px" }}>
               { editingId === car.id
@@ -70,10 +110,13 @@ function App() {
                       handleModel={(e) => setEditModel(e.target.value)}
                       handlePrice={(e) => setEditPrice(e.target.value)}
                   />
-                  : <CarCard
-                      car={car}
-                      handleEdit={handleEdit}
-                  />
+                  : <div>
+                    <CarCard
+                        car={car}
+                        handleEdit={handleEdit}
+                        handleDelete={handleDelete}
+                    />
+                  </div>
               }
             </div>
         ))}
