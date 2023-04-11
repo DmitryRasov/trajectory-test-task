@@ -4,6 +4,7 @@ import CarEdit from "./components/CarEdit";
 import CarSelectOptions from "./components/CarSelectOptions";
 import Map from "./components/Map";
 import {getCarsService} from "./components/services/getCarsService";
+import styles from './components/styles/App.module.css'
 
 function App() {
   // if api doesn't work use this:
@@ -93,7 +94,6 @@ function App() {
 
   return (
       <div>
-
         <CarSelectOptions val={sortField} handleChange={(e) => setSortField(e.target.value)}/>
 
         {sortedCars.map((car) => (
@@ -110,12 +110,13 @@ function App() {
                       handleModel={(e) => setEditModel(e.target.value)}
                       handlePrice={(e) => setEditPrice(e.target.value)}
                   />
-                  : <div>
+                  : <div className={styles.wrapper}>
                     <CarCard
                         car={car}
                         handleEdit={handleEdit}
                         handleDelete={handleDelete}
                     />
+                    <Map lat={car.latitude} long={car.longitude}/>
                   </div>
               }
             </div>
