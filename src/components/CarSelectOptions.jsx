@@ -1,8 +1,7 @@
 import React from 'react';
 import styles from './styles/SelectSortOptions.module.css'
 
-const CarSelectOptions = ({val, handleChange}) => {
-    return (
+const CarSelectOptions = ({val, handleChange}) => (
         <div>
             Sort by:
             <select className={styles.select} value={val} onChange={(e) => handleChange(e)}>
@@ -12,6 +11,4 @@ const CarSelectOptions = ({val, handleChange}) => {
             </select>
         </div>
     );
-};
-
 export default CarSelectOptions;

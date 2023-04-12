@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from "react";
+import React, {useState, useMemo, useEffect, useCallback} from "react";
 import CarCard from "./components/CarCard";
 import CarEdit from "./components/CarEdit";
 import CarSelectOptions from "./components/CarSelectOptions";
@@ -47,8 +47,9 @@ function App() {
   // ]);
   const [cars, setCars] = useState([])
   useEffect(() => {
-      const getCars = async () => setCars(await getCarsService())
-    getCars()
+    (async function (){
+      setCars(await getCarsService())
+    })()
   }, [])
 
   const [sortField, setSortField] = useState("name");
@@ -88,6 +89,9 @@ function App() {
   const handleDelete = (car) => {
     setCars(cars.filter(c => c.id !== car.id))
   }
+  const callBackEditName = useCallback(e => setEditName(e.target.value),[setEditName])
+  const callBackEditModel = useCallback(e => setEditModel(e.target.value),[setEditModel])
+  const callBackEditPrice = useCallback(e => setEditPrice(e.target.value),[setEditPrice])
 
   return (
       <div>
@@ -103,9 +107,9 @@ function App() {
                         model={editModel}
                         price={editPrice}
                         id={car.id}
-                        handleName={(e) => setEditName(e.target.value)}
-                        handleModel={(e) => setEditModel(e.target.value)}
-                        handlePrice={(e) => setEditPrice(e.target.value)}
+                        handleName={callBackEditName}
+                        handleModel={callBackEditModel}
+                        handlePrice={callBackEditPrice}
                     />
                     :
                     <CarCard
